@@ -1,4 +1,4 @@
-# autoresearch-mlx
+# autoresearch-mlx-local
 
 Apple Silicon (MLX) port of [Karpathy's autoresearch](https://github.com/karpathy/autoresearch).
 

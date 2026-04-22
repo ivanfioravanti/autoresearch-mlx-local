@@ -30,7 +30,7 @@ wheels = [
 ]
 
 [[package]]
-name = "autoresearch-mlx"
+name = "autoresearch-mlx-local"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

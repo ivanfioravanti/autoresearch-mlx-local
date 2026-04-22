@@ -1,4 +1,4 @@
-# autoresearch-mlx
+# autoresearch-mlx-local
 
 This is an Apple Silicon (MLX) port of Karpathy's autoresearch — an experiment to have the LLM do its own research. All training runs natively on MLX with unified memory. No PyTorch or CUDA required.
 
