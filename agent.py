@@ -302,7 +302,12 @@ def main():
         # Commit
         desc = f"agent experiment #{attempt}"
         run_git(["add", TRAIN_FILE])
-        run_git(["commit", "-m", desc], check=False)
+        commit_result = run_git(["commit", "-m", desc], check=False)
+        if commit_result.returncode != 0:
+            print("Git commit failed (no changes?). Skipping this attempt.")
+            crash_context = "Git commit failed — model produced identical train.py."
+            time.sleep(5)
+            continue
         commit_result = run_git(["rev-parse", "--short", "HEAD"], check=False)
         commit_hash = commit_result.stdout.strip()
         print(f"Committed as {commit_hash}: {desc}")
