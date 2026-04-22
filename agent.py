@@ -24,6 +24,7 @@ import time
 import traceback
 
 from mlx_lm import load, generate
+from mlx_lm.sample_utils import make_sampler
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -265,8 +266,7 @@ def main():
                 tokenizer,
                 prompt=prompt_tokens,
                 max_tokens=MAX_TOKENS,
-                temp=TEMP,
-                top_p=TOP_P,
+                sampler=make_sampler(temp=TEMP, top_p=TOP_P),
                 verbose=False,
             )
         except Exception as exc:
