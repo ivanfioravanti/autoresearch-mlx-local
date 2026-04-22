@@ -4,6 +4,8 @@ Apple Silicon (MLX) port of [Karpathy's autoresearch](https://github.com/karpath
 
 Full credit to [@karpathy](https://github.com/karpathy) for the core idea: fixed-time autonomous research loops controlled through `program.md`. This port keeps the same basic rules: one mutable `train.py`, one metric (`val_bpb`), a fixed 5-minute training budget, and keep-or-revert via git. It runs natively on Apple Silicon through [MLX](https://github.com/ml-explore/mlx), so there is no PyTorch or CUDA dependency.
 
+If you are new to neural networks, this ["Dummy's Guide"](https://x.com/hooeem/status/2030720614752039185) is a good entry point.
+
 ## Quick start
 
 Requirements: Apple Silicon Mac, Python 3.10+, [uv](https://docs.astral.sh/uv/).
@@ -23,6 +25,27 @@ uv run train.py
 ```
 
 Then point Claude Code or another coding agent at `program.md` and let it run the loop.
+
+## Local agent (no external API)
+
+You can also run the loop entirely locally using `mlx_lm` and an instruction-tuned MLX model:
+
+```bash
+# install dependencies (includes mlx-lm)
+uv sync
+
+# run the local agent
+uv run agent.py
+```
+
+By default `agent.py` loads `mlx-community/gemma-4-26b-a4b-it-4bit`. Set `AGENT_MODEL` to use a different model:
+
+```bash
+AGENT_MODEL=mlx-community/phi-4-4bit uv run agent.py
+```
+
+The local agent follows the same protocol as `program.md`: it reads the current `train.py`, asks the local LLM to propose a change, runs the experiment, and keeps or reverts based on `val_bpb`.
+
 
 ## What matters
 
@@ -63,8 +86,12 @@ The Mac Mini result matters because it did not just rediscover the same exact re
 - **MLX instead of PyTorch/CUDA.** Native Apple Silicon training with unified memory.
 - **AdamW-only public path.** This public `train.py` keeps the default path simple. The long Mac Mini run above explored a Muon variant in the working port, but that branch is not exposed as a public default here.
 - **Smaller eval token budget.** Reduced for faster iteration on Apple Silicon while keeping the same `evaluate_bpb` interface in `prepare.py`.
-- **Roughly 6-7 minutes per experiment.** Expect 5 minutes of training plus compile and eval overhead.
+- **Roughly 6-7 minutes per experiment.** Expect 5 minutes of training plus compile and eval overhead on Apple Silicon.
 - **MFU reporting is placeholder.** There is no Apple Silicon equivalent to the H100 FLOPs reference used upstream.
+
+## Other platforms
+
+The upstream repo maintains a list of [notable forks](https://github.com/karpathy/autoresearch#notable-forks) for Windows, AMD ROCm, and other MacOS implementations. If you are on NVIDIA hardware, start with the upstream repo directly.
 
 ## Acknowledgments
 
